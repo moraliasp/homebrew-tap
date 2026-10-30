@@ -1,6 +1,6 @@
 cask "leve" do
-  version "0.3.0"
-  sha256 "b379f42d13fccc85af28cf401c9c406e650b2e85b31029a307b99603ae6a7b9b"
+  version "0.5.0"
+  sha256 "df517936c592fb0878331ed731ee765c9cdc0809e19bfd319552e55b54b325dd"
 
   url "https://github.com/moraliasp/leve/releases/download/v#{version}/Leve_#{version}_universal.dmg"
   name "Leve"
