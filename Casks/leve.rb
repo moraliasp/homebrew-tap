@@ -1,8 +1,17 @@
 cask "leve" do
-  version "0.5.0"
-  sha256 "df517936c592fb0878331ed731ee765c9cdc0809e19bfd319552e55b54b325dd"
+  version "0.6.1"
 
-  url "https://github.com/moraliasp/leve/releases/download/v#{version}/Leve_#{version}_universal.dmg"
+  on_arm do
+    sha256 "a1c4cedf1c873812fc468b84d670abc817b37732ae717c84c76263f12156fc53"
+
+    url "https://github.com/moraliasp/leve/releases/download/v#{version}/Leve_#{version}_aarch64.dmg"
+  end
+  on_intel do
+    sha256 "08fba430626b83935190fe43d3ced0b16f30ca05557d6cf316d57f9bcbf1b21e"
+
+    url "https://github.com/moraliasp/leve/releases/download/v#{version}/Leve_#{version}_x64.dmg"
+  end
+
   name "Leve"
   desc "Small, fast, private Markdown viewer"
   homepage "https://github.com/moraliasp/leve"
@@ -17,6 +26,14 @@ cask "leve" do
 
   app "Leve.app"
 
+  preflight_steps do
+    if_path_exists "Leve.app/Contents/Info.plist", base: :appdir do
+      run "/bin/echo", args: ["Leve is already installed. Keeping it; it updates itself."], print_stdout: true
+      remove "Leve.app", recursive: true
+      move "Leve.app", "Leve.app", source_base: :appdir
+    end
+  end
+
   zap trash: [
     "~/Library/Application Support/br.com.moralia.leve",
     "~/Library/Caches/br.com.moralia.leve",
@@ -25,13 +42,4 @@ cask "leve" do
     "~/Library/Saved Application State/br.com.moralia.leve.savedState",
     "~/Library/WebKit/br.com.moralia.leve",
   ]
-
-  caveats <<~EOS
-    Leve is not signed or notarized by Apple yet, so macOS blocks the first launch.
-    Open Leve once, click Done, then go to System Settings > Privacy & Security
-    and click Open Anyway. macOS may ask again after brew upgrade.
-    Or remove the quarantine flag yourself, if you trust this download:
-      xattr -dr com.apple.quarantine "#{appdir}/Leve.app"
-    Checksums and build provenance: https://github.com/moraliasp/leve/releases
-  EOS
 end
